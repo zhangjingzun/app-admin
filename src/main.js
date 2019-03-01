@@ -14,6 +14,8 @@ import menuHeader from '@/menu/header'
 import menuAside from '@/menu/aside'
 import { frameInRoutes } from '@/router/routes'
 import './assets/css/public.css'
+import axios from 'axios'
+Vue.prototype.$axios = axios
 // 核心插件
 Vue.use(d2Admin)
 

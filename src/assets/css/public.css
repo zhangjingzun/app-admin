@@ -167,6 +167,9 @@
   width: 30px;
   margin-right: 15px;
 }
+.banner .banner-list .banner-item .item-upload {
+  display: inline-block;
+}
 .banner .banner-list .banner-item .item-btn a {
   font-size: 14px;
   color: #fff;
