@@ -9,7 +9,11 @@ export default {
   redirect: { name: 'banner' },
   component: layoutHeaderAside,
   children: (pre => [
-    { path: 'banner', name: `${pre}banner`, component: () => import('@/pages/home/banner'), meta: { ...meta, title: '轮播图管理' } },
-    { path: 'classic', name: `${pre}classic`, component: () => import('@/pages/home/classic'), meta: { ...meta, title: '分类管理' } }
+    // {
+    //   path: 'banner',
+    //   name: `${pre}banner`,
+    //   component: () => import('@/pages/home/banner'),
+    //   meta: { ...meta, title: '轮播图管理' }
+    // }
   ])('demo-')
 }

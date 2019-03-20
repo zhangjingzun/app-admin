@@ -16,9 +16,40 @@ const frameIn = [
         path: 'index',
         name: 'index',
         meta: {
-          auth: true
+          auth: true,
+          title: '首页'
         },
         component: () => import('@/pages/index')
+      },
+      // 商品分类管理
+      {
+        path: 'classic',
+        name: 'classic',
+        meta: {
+          auth: true,
+          title: '分类管理'
+        },
+        component: () => import('@/pages/classic')
+      },
+      // 轮播图管理
+      {
+        path: 'banner',
+        name: 'banner',
+        meta: {
+          auth: true,
+          title: '轮播图管理'
+        },
+        component: () => import('@/pages/banner')
+      },
+      // 商品管理页面
+      {
+        path: 'shop',
+        name: 'shop',
+        meta: {
+          auth: true,
+          title: '商品管理'
+        },
+        component: () => import('@/pages/shop')
       },
       // 刷新页面 必须保留
       {
@@ -45,8 +76,7 @@ const frameIn = [
         }
       }
     ]
-  },
-  home
+  }
 ]
 
 /**

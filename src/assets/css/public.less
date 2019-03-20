@@ -144,19 +144,19 @@
 }
 /*轮播图管理*/
 .banner{
-    .upload-icon{
+    .upload_icon{
         font-size: 150px;
         color: #999999;
         cursor: pointer;
     }
-    .banner-list{
-        .banner-item{
+    .banner_list{
+        .banner_item{
             display: flex;
             align-items: center;
             height: 200px;
             border-bottom: 1px solid #e6e6e6;
             padding-left: 20px;
-            .item-img{
+            .item_img{
                 height: 150px;
                 width: 500px;
                 margin-right: 20px;
@@ -165,16 +165,16 @@
                     max-width: 100%;
                 }
             }
-            .item-num{
+            .item_num{
                 font-size: 14px;
                 color: #333;
                 width: 30px;
                 margin-right: 15px;
             }
-            .item-upload{
+            .item_upload{
                 display: inline-block;
             }
-            .item-btn{
+            .item_btn{
                 a{
                     font-size: 14px;
                     color: #fff;
@@ -183,6 +183,34 @@
                     background-color: #c00303;
                     border-radius: 5px;
                 }
+            }
+        }
+    }
+}
+/**分类管理*/
+.classic{
+    .classic_head{
+        .head_btn{
+            width: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            background-color: #96b3e6;
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    }
+    .classic_list{
+        width: 700px;
+        .classic_item{
+            display: flex;
+            .item{
+                display: flex;
+                flex: 1;
+                align-items: center;
+                justify-content: center;
             }
         }
     }
