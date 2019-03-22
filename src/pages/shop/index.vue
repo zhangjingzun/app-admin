@@ -1,5 +1,5 @@
 <template>
-  <d2-container :filename="filename" class="banner">
+  <d2-container :filename="filename" class="shop">
     <template slot="header">商品管理</template>
     <d2-crud
       ref="d2Crud"
@@ -76,7 +76,8 @@ export default {
       console.log('go to edit')
     },
     handleNew () {
-      console.log('go to add')
+      console.log(this.$route)
+      this.$router.push('/shop/add')
     }
   }
 }

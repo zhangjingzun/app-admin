@@ -1,4 +1,4 @@
-import home from './modules/home'
+import shop from './modules/shop'
 
 import layoutHeaderAside from '@/layout/header-aside'
 
@@ -76,7 +76,8 @@ const frameIn = [
         }
       }
     ]
-  }
+  },
+  shop
 ]
 
 /**
