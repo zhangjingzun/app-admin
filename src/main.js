@@ -18,12 +18,15 @@ import axios from 'axios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import D2Crud from '@d2-projects/d2-crud'
+import plugin from './plugin/util/'
+
 Vue.prototype.$axios = axios
 Vue.use(ElementUI)
 Vue.use(D2Crud)
+
 // 核心插件
 Vue.use(d2Admin)
-
+Vue.use(plugin, { router: router })
 new Vue({
   router,
   store,

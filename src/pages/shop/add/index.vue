@@ -2,111 +2,228 @@
   <d2-container :filename="filename" class="add">
     <el-form ref="form" :model="form" label-width="80px">
       <el-form-item label="商品名称">
-        <el-input v-model="form.title"></el-input>
+        <el-input v-model="form.shop_name"></el-input>
         <el-tag>30字以内</el-tag>
       </el-form-item>
       <el-form-item label="商品描述">
-        <el-input v-model="form.desc"></el-input>
+        <el-input v-model="form.shop_desc"></el-input>
         <el-tag>50字以内</el-tag>
       </el-form-item>
       <el-form-item label="商品主图">
+        <el-row style="margin-bottom: 20px;" v-if="shopImg.length > 0">
+          <el-col style="width: 200px;margin-bottom: 10px;" v-for="(item, index) in shopImg" :key="index" :style="index > 0 ? 'margin-left: 20px;' : 0">
+            <el-card :body-style="{ padding: '10px' }">
+              <img style="width: 180px;height: 180px;" :src="item" class="image">
+              <div style="padding: 14px;">
+                <div class="bottom clearfix">
+                  <el-button type="text" class="button" @click="delBanner(index, 1)">删除</el-button>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
         <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
-          list-type="picture-card"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :on-success="handleSuccess"
-          :on-error="handleError">
-          <i class="el-icon-plus"></i>
+          action="/"
+          :show-file-list="showFileList"
+          :before-upload="beforeUpload"
+        >
+          <el-button size="small" @click="uploadType = '1'" type="primary">点击上传</el-button>
+          <el-tag>支持png/jpg</el-tag>
         </el-upload>
-        <el-tag>支持png/jpg</el-tag>
       </el-form-item>
       <el-form-item label="商品原价">
-        <el-input v-model="form.old_price"></el-input>
+        <el-input v-model="form.shop_old_price"></el-input>
         <el-tag>单位（元）</el-tag>
       </el-form-item>
       <el-form-item label="商品现价">
-        <el-input v-model="form.price"></el-input>
+        <el-input v-model="form.shop_price"></el-input>
         <el-tag>单位（元）</el-tag>
       </el-form-item>
       <el-form-item label="商品详情">
+        <el-row style="margin-bottom: 20px;" v-if="detailImg.length > 0">
+          <el-col style="width: 200px;margin-bottom: 10px;" v-for="(item, index) in detailImg" :key="index" :style="index > 0 ? 'margin-left: 20px;' : 0">
+            <el-card :body-style="{ padding: '10px' }">
+              <img style="width: 180px;height: 180px;" :src="item" class="image">
+              <div style="padding: 14px;">
+                <div class="bottom clearfix">
+                  <el-button type="text" class="button" @click="delBanner(index, 2)">删除</el-button>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
         <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
-          list-type="picture-card"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :on-success="handleSuccess"
-          :on-error="handleError">
-          <i class="el-icon-plus"></i>
-        </el-upload>
+          action="/"
+          :show-file-list="showFileList"
+          :before-upload="beforeUpload"
+        >
+        <el-button size="small" @click="uploadType = '2'" type="primary">点击上传</el-button>
         <el-tag>商品详情由图片组成，支持png/jpg</el-tag>
+        </el-upload>
       </el-form-item>
-      <!-- <el-form-item label="商品详情">
-        <vue-ueditor-wrap :config="config" v-model="form.detail"></vue-ueditor-wrap>
-      </el-form-item> -->
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
-        <el-button>取消</el-button>
+        <el-button type="primary" @click="onSubmit">{{submitBtnText}}</el-button>
+        <el-button @click="goBack">取消</el-button>
       </el-form-item>
     </el-form>
   </d2-container>
 </template>
 <script>
-// import VueUeditorWrap from 'vue-ueditor-wrap'
+import * as requestApi from '../../../request'
 export default {
-  // components: {
-  //   VueUeditorWrap
-  // },
   data () {
     return {
       filename: __filename,
+      shopImg: [
+      ],
+      detailImg: [
+      ],
+      submitBtnText: '立即创建',
+      shopId: null,
+      uploadType: '1',
+      showFileList: false,
       form: {
-        title: '',
-        desc: '',
-        old_price: '',
-        price: '',
-        image: [],
-        // detail: '在此编辑详情',
-        detailImgs: []
+        shop_name: '',
+        shop_desc: '',
+        shop_old_price: '',
+        shop_price: '',
+        shop_img: '',
+        shop_detail: ''
       }
-      // config: {
-        // // 编辑器不自动被内容撑高
-        // autoHeightEnabled: false,
-        // // 初始容器高度
-        // initialFrameHeight: 240,
-        // // 初始容器宽度
-        // initialFrameWidth: '100%',
-        // // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
-        // serverUrl: 'http://35.201.165.105:8000/controller.php',
-        // // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况，如果需要特殊配置，参考下方的常见问题2
-        // UEDITOR_HOME_URL: '/static/UEditor/'
-      // }
     }
   },
+  created () {
+    this.$nextTick(() => {
+      let id = this.$route.query.id
+      if (id) {
+        // edit
+        this.shopId = id
+        this.getDetail(id)
+        this.submitBtnText = '确认修改'
+      }
+    })
+  },
   methods: {
+    getDetail (id) {
+      let _this = this
+      requestApi.apiGetShopDetail(id).then(res => {
+        if (res.code === 0) {
+          let data = res.data
+          _this.form = {
+            shop_name: data.shop_name,
+            shop_desc: data.shop_desc,
+            shop_old_price: data.shop_old_price,
+            shop_price: data.shop_price,
+            shop_img: '',
+            shop_detail: ''
+          }
+          let arr = data.shop_img.split(',')
+          _this.shopImg = arr
+          let list = data.shop_detail.split(',')
+          _this.detailImg = list
+        }
+      })
+    },
     onSubmit () {
-      console.log('submit!')
+      let data = this.form
+      let arr = this.shopImg
+      data.shop_img = arr.join(',')
+      let list = this.detailImg
+      data.shop_detail = list.join(',')
+      let _this = this
+      if (this.shopId) {
+        data.shopId = this.shopId
+        requestApi.apiAddShop(data).then(res => {
+          if (res.code === 0) {
+            _this.showSuccess(_this, res.msg)
+            setTimeout(() => {
+              _this.goBack()
+            }, 1000)
+          } else {
+            _this.showWarning(_this, res.msg)
+          }
+        })
+      } else {
+        requestApi.apiAddShop(data).then(res => {
+          if (res.code === 0) {
+            _this.showSuccess(_this, res.msg)
+            setTimeout(() => {
+              _this.goBack()
+            }, 1000)
+          } else {
+            _this.showWarning(_this, res.msg)
+          }
+        })
+      }
     },
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
+    goBack () {
+      this.$router.replace('/shop')
     },
-    handleSuccess (response, file, fileList) {
-      this.$message({
-        message: '上传成功',
-        type: 'success'
+    beforeUpload (file) {
+      let uploadType = this.uploadType
+      let arr = []
+      let imgLength = 5
+      if (uploadType === '1') {
+        arr = this.shopImg
+      } else {
+        arr = this.detailImg
+        imgLength = 15
+      }
+      if (arr.length === imgLength) {
+        this.showWarning(this, `最多上传${imgLength}张图片`)
+        return false
+      }
+      let name = file.name
+      let canFlag = true
+      arr.forEach((item, index) => {
+        if (item.name === name) {
+          canFlag = false
+        }
       })
-    },
-    handleError () {
-      this.$message({
-        message: `文件上传失败`,
-        type: 'warning'
+      if (!canFlag) {
+        this.showWarning(this, `该图片已存在`)
+        return false
+      }
+      let data = new FormData()
+      data.append('file', file)
+      let _this = this
+      requestApi.apiAddShopImg(data).then(res => {
+        if (res.code === 0) {
+          this.showSuccess(this, '上传成功')
+          if (uploadType === '1') {
+            _this.shopImg.push(res.data.url)
+          } else {
+            _this.detailImg.push(res.data.url)
+          }
+        } else {
+          this.showWarning(this, res.msg)
+        }
+      }).catch(e => {
+        this.showWarning(this, `网络连接失败`)
       })
+      return false
     },
-    handlePreview (file) {
-      console.log(file)
-      this.$message({
-        message: `已存在文件${file.name}`,
-        type: 'warning'
+    delBanner (index, type) {
+      let arr = []
+      if (type === 1) {
+        arr = this.shopImg
+      } else {
+        arr = this.detailImg
+      }
+      let url = arr[index]
+      let _this = this
+      let i = index
+      requestApi.apiDelShopImg(url).then(res => {
+        if (res.code === 0) {
+          _this.showSuccess(_this, res.msg)
+          if (type === 1) {
+            _this.shopImg.splice(i, 1)
+          } else {
+            _this.detailImg.splice(i, 1)
+          }
+        } else {
+          _this.showWarning(_this, res.msg)
+        }
       })
     }
   }

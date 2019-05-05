@@ -4,7 +4,7 @@
     <d2-crud
       ref="d2Crud"
       :columns="columns"
-      :data="data"
+      :data="dataList"
       add-title="我的新增"
       @custom-emit-detail-btn="handleDetail"
       @custom-emit-edit-btn="handleEdit"
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import * as requestApi from '../../request'
 export default {
   name: 'shop',
   data () {
@@ -22,34 +23,19 @@ export default {
       filename: __filename,
       columns: [
         {
-          title: '商品编号',
-          key: 'number'
+          title: '商品ID',
+          key: 'id'
         },
         {
           title: '商品标题',
-          key: 'title'
+          key: 'shop_name'
         },
         {
           title: '商品描述',
-          key: 'desc'
+          key: 'shop_desc'
         }
       ],
-      data: [
-        {
-          number: '01',
-          title: '亚合智能门',
-          desc: '亚合智能门，是环保门，是会呼吸的门亚合智能门'
-        },
-        {
-          number: '02',
-          title: '亚合智能门',
-          desc: '亚合智能门，是环保门，是会呼吸的门亚合智能门'
-        },
-        {
-          number: '03',
-          title: '亚合智能门',
-          desc: '亚合智能门，是环保门，是会呼吸的门亚合智能门'
-        }
+      dataList: [
       ],
       rowHandle: {
         custom: [
@@ -68,15 +54,24 @@ export default {
       }
     }
   },
+  created () {
+    this.$nextTick(() => {
+      this.getShops()
+    })
+  },
   methods: {
-    handleDetail () {
-      console.log('go to detail')
+    getShops () {
+      requestApi.apiGetShopImg().then(res => {
+        this.dataList = res.data
+      })
     },
-    handleEdit () {
-      console.log('go to edit')
+    handleDetail ({ index }) {
+    },
+    handleEdit ({ index }) {
+      let id = this.dataList[index].id
+      this.$router.push(`/shop/add?id=${id}`)
     },
     handleNew () {
-      console.log(this.$route)
       this.$router.push('/shop/add')
     }
   }
