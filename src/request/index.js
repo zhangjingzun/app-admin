@@ -47,3 +47,39 @@ export const apiGetShopImg = function () {
 export const apiGetShopDetail = function (id) {
   return http.post('/shop/getDetail', { id: id })
 }
+/**
+ * 获取分类列表
+ */
+export const apiGetClassic = function () {
+  return http.get('/classic/get')
+}
+/**
+ * 添加分类
+ */
+export const apiAddClassic = function (name, id = null) {
+  return http.post('/classic/add', { class_name: name, id: id })
+}
+/**
+ * 删除分类
+ */
+export const apiDelClassic = function (id) {
+  return http.post('/classic/del', { id: id })
+}
+/**
+ * 公司信息
+ */
+export const apiUpdateInfo = function (data) {
+  return http.post('/info/update', data)
+}
+/**
+ * 获取公司信息
+ */
+export const apiGetInfo = function () {
+  return http.get('/info/get')
+}
+/**
+ * 上传关于我们图片
+ */
+export const apiUploadAboutBanner = function (data) {
+  return http.post('/info/upload', data)
+}

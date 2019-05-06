@@ -2,9 +2,9 @@
   <d2-container :filename="filename" class="banner">
     <template slot="header">轮播图管理</template>
     <el-row style="margin-bottom: 20px;">
-      <el-col style="width: 200px;margin-bottom: 10px;" v-for="(item, index) in fileList" :key="index" :style="index > 0 ? 'margin-left: 20px;' : 0">
+      <el-col style="width: 395px;margin-bottom: 10px;" v-for="(item, index) in fileList" :key="index" :style="'margin-right: 20px;'">
         <el-card :body-style="{ padding: '10px' }">
-          <img style="width: 180px;height: 180px;" :src="item.url" class="image">
+          <img style="width: 375px;height: 150px;" :src="item.url" class="image">
           <div style="padding: 14px;">
             <span style="display: block;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{item.name}}</span>
             <div class="bottom clearfix">
@@ -92,11 +92,9 @@ export default {
     getBanner () {
       let _this = this
       requestApi.apiGetBanner().then(res => {
-        console.log(res)
         if (res.code === 0) {
           let data = res.data
           _this.fileList = data
-          console.log(_this.fileList)
         } else {
           _this.showWarning(_this, res.msg)
         }
@@ -109,7 +107,6 @@ export default {
       let _this = this
       let i = index
       requestApi.apiDelFile(url).then(res => {
-        console.log(res)
         if (res.code === 0) {
           _this.showSuccess(_this, res.msg)
           _this.fileList.splice(i, 1)

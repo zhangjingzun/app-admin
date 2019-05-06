@@ -4,7 +4,7 @@
     <d2-crud
       ref="d2Crud"
       :columns="columns"
-      :data="data"
+      :data="dataList"
       add-title="我的新增"
       :edit-template="editTemplate"
       :form-options="formOptions"
@@ -12,14 +12,15 @@
       @dialog-cancel="handleDialogCancel"
       :rowHandle="rowHandle"
       @row-remove="handleRowRemove"
-      @d2-data-change="handleDataChange"
-      @row-edit="handleRowEdit">
+      @row-edit="handleRowEdit"
+      @dialog-open="handleOpenDialog">
       <el-button slot="header" style="margin-bottom: 5px" @click="addRowWithNewTemplate">新增分类</el-button>
     </d2-crud>
   </d2-container>
 </template>
 
 <script>
+import * as requestApi from '../../request'
 export default {
   name: 'classic',
   data () {
@@ -28,54 +29,19 @@ export default {
       today: '',
       columns: [
         {
-          title: '序号',
+          title: 'ID',
           key: 'id'
         },
         {
           title: '分类名称',
-          key: 'name'
+          key: 'class_name'
         },
         {
           title: '创建时间',
-          key: 'date'
+          key: 'creat_time'
         }
       ],
-      data: [
-        {
-          id: '01',
-          date: '2018-05-05',
-          name: '分类1',
-          forbidRemove: false,
-          showRemoveButton: true
-        },
-        {
-          id: '02',
-          date: '2018-05-05',
-          name: '分类1',
-          forbidRemove: false,
-          showRemoveButton: true
-        },
-        {
-          id: '03',
-          date: '2018-05-05',
-          name: '分类1',
-          forbidRemove: false,
-          showRemoveButton: true
-        },
-        {
-          id: '04',
-          date: '2018-05-05',
-          name: '分类1',
-          forbidRemove: false,
-          showRemoveButton: true
-        },
-        {
-          id: '05',
-          date: '2018-05-05',
-          name: '分类1',
-          forbidRemove: false,
-          showRemoveButton: true
-        }
+      dataList: [
       ],
       formOptions: {
         labelWidth: '80px',
@@ -87,19 +53,7 @@ export default {
           icon: 'el-icon-delete',
           size: 'small',
           fixed: 'right',
-          confirm: true,
-          show (index, row) {
-            if (row.showRemoveButton) {
-              return true
-            }
-            return false
-          },
-          disabled (index, row) {
-            if (row.forbidRemove) {
-              return true
-            }
-            return false
-          }
+          confirm: true
         },
         edit: {
           icon: 'el-icon-edit',
@@ -107,9 +61,8 @@ export default {
           size: 'small'
         }
       },
-
       editTemplate: {
-        name: {
+        class_name: {
           title: '分类名称',
           value: ''
         }
@@ -117,11 +70,22 @@ export default {
     }
   },
   created () {
-    this.getThisDate()
+    this.getClassicList()
   },
   methods: {
+    // 获取分类列表
+    getClassicList () {
+      let _this = this
+      requestApi.apiGetClassic().then(res => {
+        if (res.code === 0) {
+          _this.dataList = res.data
+        } else {
+          _this.showWarning('网络错误，稍后重试')
+        }
+      })
+    },
     // 获取当前时间
-    getThisDate () { // author: meizz
+    getThisDate () {
       var date = new Date()
       var y = date.getFullYear()
       var m = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : `0${(date.getMonth() + 1)}`
@@ -130,37 +94,23 @@ export default {
     },
     // 删除分类
     handleRowRemove ({ index, row }, done) {
-      setTimeout(() => {
-        console.log(index)
-        console.log(row)
-        this.$message({
-          message: '删除成功',
-          type: 'success'
-        })
-        done()
-      }, 300)
+      let id = this.dataList[index].id
+      let _this = this
+      requestApi.apiDelClassic(id).then(res => {
+        if (res.code === 1) {
+          _this.showWarning(_this, res.msg)
+        } else {
+          _this.showSuccess(_this, res.msg)
+          done()
+        }
+      })
     },
     // 传入自定义模板的新增
     addRowWithNewTemplate () {
-      let _id = (this.data.length + 1) > 9 ? (this.data.length + 1) : `0${(this.data.length + 1)}`
       this.$refs.d2Crud.showDialog({
         mode: 'add',
         template: {
-          id: {
-            title: '序号',
-            value: _id,
-            component: {
-              disabled: true
-            }
-          },
-          date: {
-            title: '创建时间',
-            value: this.today,
-            component: {
-              disabled: true
-            }
-          },
-          name: {
+          class_name: {
             title: '分类名称',
             value: ''
           }
@@ -169,19 +119,36 @@ export default {
     },
     // 添加事件
     handleRowAdd (row, done) {
-      row.forbidRemove = false
-      row.showRemoveButton = true
       this.formOptions.saveLoading = true
-      setTimeout(() => {
-        console.log(row)
-        this.$message({
-          message: '保存成功',
-          type: 'success'
-        })
-        // done可以传入一个对象来修改提交的某个字段
-        done()
-        this.formOptions.saveLoading = false
-      }, 300)
+      let name = row.class_name
+      let _this = this
+      requestApi.apiAddClassic(name).then(res => {
+        _this.formOptions.saveLoading = false
+        if (res.code === 1) {
+          _this.showWarning(_this, res.msg)
+        } else {
+          _this.showSuccess(_this, res.msg)
+          _this.dataList = res.data
+          done()
+        }
+      })
+    },
+    // 编辑完毕
+    handleRowEdit ({ index, row }, done) {
+      let id = this.dataList[index].id
+      let name = row.class_name
+      let _this = this
+      this.formOptions.saveLoading = true
+      requestApi.apiAddClassic(name, id).then(res => {
+        _this.formOptions.saveLoading = false
+        if (res.code === 1) {
+          _this.showWarning(_this, res.msg)
+        } else {
+          _this.showSuccess(_this, res.msg)
+          _this.dataList = res.data
+          done()
+        }
+      })
     },
     handleDialogCancel (done) {
       this.$message({
@@ -190,23 +157,7 @@ export default {
       })
       done()
     },
-    // 数据变化
-    handleDataChange (data) {
-      console.log(data)
-    },
-    // 编辑完毕
-    handleRowEdit ({ index, row }, done) {
-      this.formOptions.saveLoading = true
-      setTimeout(() => {
-        console.log(index)
-        console.log(row)
-        this.$message({
-          message: '编辑成功',
-          type: 'success'
-        })
-        done()
-        this.formOptions.saveLoading = false
-      }, 300)
+    handleOpenDialog ({ mode, row }) {
     }
   }
 }

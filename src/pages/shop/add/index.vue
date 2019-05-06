@@ -5,13 +5,15 @@
         <el-input v-model="form.shop_name"></el-input>
         <el-tag>30字以内</el-tag>
       </el-form-item>
+
       <el-form-item label="商品描述">
         <el-input v-model="form.shop_desc"></el-input>
         <el-tag>50字以内</el-tag>
       </el-form-item>
+
       <el-form-item label="商品主图">
         <el-row style="margin-bottom: 20px;" v-if="shopImg.length > 0">
-          <el-col style="width: 200px;margin-bottom: 10px;" v-for="(item, index) in shopImg" :key="index" :style="index > 0 ? 'margin-left: 20px;' : 0">
+          <el-col style="width: 200px;margin-bottom: 10px;" v-for="(item, index) in shopImg" :key="index" :style="'margin-right: 20px;'">
             <el-card :body-style="{ padding: '10px' }">
               <img style="width: 180px;height: 180px;" :src="item" class="image">
               <div style="padding: 14px;">
@@ -31,17 +33,32 @@
           <el-tag>支持png/jpg</el-tag>
         </el-upload>
       </el-form-item>
+
       <el-form-item label="商品原价">
         <el-input v-model="form.shop_old_price"></el-input>
         <el-tag>单位（元）</el-tag>
       </el-form-item>
+
       <el-form-item label="商品现价">
         <el-input v-model="form.shop_price"></el-input>
         <el-tag>单位（元）</el-tag>
       </el-form-item>
+
+      <el-form-item label="商品分类">
+        <el-select v-model="selectValue" placeholder="请选择" @change="classicChange">
+          <el-option
+            v-for="item in classList"
+            :key="item.id"
+            :label="item.class_name"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="商品详情">
         <el-row style="margin-bottom: 20px;" v-if="detailImg.length > 0">
-          <el-col style="width: 200px;margin-bottom: 10px;" v-for="(item, index) in detailImg" :key="index" :style="index > 0 ? 'margin-left: 20px;' : 0">
+          <el-col style="width: 200px;margin-bottom: 10px;" v-for="(item, index) in detailImg" :key="index" :style="'margin-right: 20px;'">
             <el-card :body-style="{ padding: '10px' }">
               <img style="width: 180px;height: 180px;" :src="item" class="image">
               <div style="padding: 14px;">
@@ -61,10 +78,22 @@
         <el-tag>商品详情由图片组成，支持png/jpg</el-tag>
         </el-upload>
       </el-form-item>
+
+      <el-form-item label="是否推荐">
+        <el-radio v-model="form.is_recommend" label="1">是</el-radio>
+        <el-radio v-model="form.is_recommend" label="0">否</el-radio>
+      </el-form-item>
+
+      <el-form-item label="是否热门">
+        <el-radio v-model="form.is_hot" label="1">是</el-radio>
+        <el-radio v-model="form.is_hot" label="0">否</el-radio>
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" @click="onSubmit">{{submitBtnText}}</el-button>
         <el-button @click="goBack">取消</el-button>
       </el-form-item>
+
     </el-form>
   </d2-container>
 </template>
@@ -82,18 +111,25 @@ export default {
       shopId: null,
       uploadType: '1',
       showFileList: false,
+      classList: [
+      ],
+      selectValue: '',
       form: {
         shop_name: '',
         shop_desc: '',
         shop_old_price: '',
         shop_price: '',
         shop_img: '',
-        shop_detail: ''
+        shop_detail: '',
+        is_hot: '0',
+        is_recommend: '0',
+        classic_id: null
       }
     }
   },
   created () {
     this.$nextTick(() => {
+      this.getClassicList()
       let id = this.$route.query.id
       if (id) {
         // edit
@@ -104,6 +140,22 @@ export default {
     })
   },
   methods: {
+    // 获取分类列表
+    getClassicList () {
+      let _this = this
+      requestApi.apiGetClassic().then(res => {
+        if (res.code === 0) {
+          _this.classList = res.data
+        } else {
+          _this.showWarning('网络错误，稍后重试')
+        }
+      })
+    },
+    // 分类选择
+    classicChange (item) {
+      this.form.classic_id = item
+    },
+    // 获取商品详情
     getDetail (id) {
       let _this = this
       requestApi.apiGetShopDetail(id).then(res => {
@@ -115,12 +167,19 @@ export default {
             shop_old_price: data.shop_old_price,
             shop_price: data.shop_price,
             shop_img: '',
-            shop_detail: ''
+            shop_detail: '',
+            is_hot: data.is_hot,
+            is_recommend: data.is_recommend,
+            classic_id: data.classic_id
           }
-          let arr = data.shop_img.split(',')
-          _this.shopImg = arr
-          let list = data.shop_detail.split(',')
-          _this.detailImg = list
+          let classList = _this.classList
+          classList.forEach((item, index) => {
+            if (item.id === data.classic_id) {
+              _this.selectValue = item.class_name
+            }
+          })
+          _this.shopImg = data.shop_img.split(',')
+          _this.detailImg = data.shop_detail.split(',')
         }
       })
     },
@@ -144,6 +203,7 @@ export default {
           }
         })
       } else {
+        data.shopId = null
         requestApi.apiAddShop(data).then(res => {
           if (res.code === 0) {
             _this.showSuccess(_this, res.msg)

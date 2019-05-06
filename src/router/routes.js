@@ -51,6 +51,16 @@ const frameIn = [
         },
         component: () => import('@/pages/shop')
       },
+      // 关于我们
+      {
+        path: 'about',
+        name: 'about',
+        meta: {
+          auth: true,
+          title: '关于我们'
+        },
+        component: () => import('@/pages/about')
+      },
       // 刷新页面 必须保留
       {
         path: 'refresh',
