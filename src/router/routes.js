@@ -61,6 +61,15 @@ const frameIn = [
         },
         component: () => import('@/pages/about')
       },
+      // {
+      //   path: 'user',
+      //   name: 'about',
+      //   meta: {
+      //     auth: true,
+      //     title: '账号管理'
+      //   },
+      //   component: () => import('@/page/user')
+      // },
       // 刷新页面 必须保留
       {
         path: 'refresh',

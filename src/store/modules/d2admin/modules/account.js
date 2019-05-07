@@ -1,5 +1,5 @@
 import util from '@/libs/util.js'
-import { AccountLogin } from '@api/sys.login'
+import * as requestApi from '@/request/index.js'
 
 export default {
   namespaced: true,
@@ -14,36 +14,30 @@ export default {
      */
     login ({ dispatch }, {
       vm,
+      verify,
       username,
       password
     }) {
       return new Promise((resolve, reject) => {
-        // 开始请求登录接口
-        AccountLogin({
+        let data = {
+          verify,
           username,
           password
+        }
+        requestApi.apiLogin(data).then(async res => {
+          util.cookies.set('token', res.data.token)
+          // 设置 vuex 用户信息
+          await dispatch('d2admin/user/set', {
+            name: res.data.user_name
+          }, { root: true })
+          // 用户登录后从持久化数据加载一系列的设置
+          await dispatch('load')
+          // 结束
+          resolve(res)
+        }).catch(err => {
+          console.log('err: ', err)
+          reject(err)
         })
-          .then(async res => {
-            // 设置 cookie 一定要存 uuid 和 token 两个 cookie
-            // 整个系统依赖这两个数据进行校验和存储
-            // uuid 是用户身份唯一标识 用户注册的时候确定 并且不可改变 不可重复
-            // token 代表用户当前登录状态 建议在网络请求中携带 token
-            // 如有必要 token 需要定时更新，默认保存一天
-            util.cookies.set('uuid', res.uuid)
-            util.cookies.set('token', res.token)
-            // 设置 vuex 用户信息
-            await dispatch('d2admin/user/set', {
-              name: res.name
-            }, { root: true })
-            // 用户登录后从持久化数据加载一系列的设置
-            await dispatch('load')
-            // 结束
-            resolve()
-          })
-          .catch(err => {
-            console.log('err: ', err)
-            reject(err)
-          })
       })
     },
     /**

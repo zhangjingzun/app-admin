@@ -83,3 +83,15 @@ export const apiGetInfo = function () {
 export const apiUploadAboutBanner = function (data) {
   return http.post('/info/upload', data)
 }
+/**
+ * 登录
+ */
+export const apiLogin = function (data) {
+  return http.post('/user/login', data)
+}
+/**
+ * 验证码
+ */
+// export const apiGetVerify = function (data) {
+//   return http.get('/user/verify', data)
+// }
