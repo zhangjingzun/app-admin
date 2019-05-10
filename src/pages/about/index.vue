@@ -5,7 +5,7 @@
         <el-row style="margin-bottom: 20px;" v-show="form.info_img != ''">
           <el-col style="width: 395px;margin-bottom: 10px;">
             <el-card :body-style="{ padding: '10px' }">
-              <img style="width: 375px;height: 150px;" :src="form.info_img" class="image">
+              <img style="width: 375px;height: 150px;" :src="`${hostUrl}${form.info_img}`" class="image">
             </el-card>
           </el-col>
         </el-row>
@@ -65,7 +65,8 @@ export default {
         info_lon: '',
         info_lat: '',
         info_img: ''
-      }
+      },
+      oldImg: []
     }
   },
   created () {
@@ -79,6 +80,9 @@ export default {
       requestApi.apiGetInfo().then(res => {
         if (res.code === 0) {
           _this.form = res.data
+          if (_this.form.info_img !== '') {
+            _this.oldImg.push(_this.form.info_img)
+          }
         } else {
           _this.showWarning(_this, res.msg)
         }
@@ -92,6 +96,9 @@ export default {
       requestApi.apiUploadAboutBanner(data).then(res => {
         if (res.code === 0) {
           this.showSuccess(this, '上传成功')
+          if (_this.form.info_img !== '') {
+            _this.oldImg.push(_this.form.info_img)
+          }
           _this.form.info_img = res.data
         } else {
           this.showWarning(this, res.msg)
@@ -101,7 +108,18 @@ export default {
       })
       return false
     },
+    delOldImg () {
+      let _this = this
+      let data = {
+        list: this.oldImg
+      }
+      requestApi.apiDelAboutBanner(data).then(res => {
+      })
+    },
     onSubmit () {
+      if (this.oldImg.length > 0) {
+        this.delOldImg()
+      }
       let _this = this
       requestApi.apiUpdateInfo(this.form).then(res => {
         if (res.code === 0) {

@@ -41,6 +41,16 @@ const frameIn = [
         },
         component: () => import('@/pages/banner')
       },
+      // 轮播图管理
+      {
+        path: 'join',
+        name: 'join',
+        meta: {
+          auth: true,
+          title: '轮播图管理'
+        },
+        component: () => import('@/pages/join')
+      },
       // 商品管理页面
       {
         path: 'shop',

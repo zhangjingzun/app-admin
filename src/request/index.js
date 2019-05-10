@@ -3,7 +3,6 @@ import http from './http'
 export const apiGetBanner = function () {
   return http.get('/banner/get')
 }
-
 /**
  * 上传图片
  */
@@ -16,6 +15,26 @@ export const apiUploadFile = function (data) {
 export const apiDelFile = function (url) {
   return http.post('/banner/del', { url: url })
 }
+
+// ++++++++++++++++++++++
+
+export const apiGetJoin = function () {
+  return http.get('/join/get')
+}
+
+/**
+ * 上传图片
+ */
+export const apiUploadJoin = function (data) {
+  return http.post('/join/set', data)
+}
+/**
+ * 删除图片
+ */
+export const apiDelJoin = function (url) {
+  return http.post('/join/del', { url: url })
+}
+// ++++++++++++++++++++++
 
 /**
  * 添加商品
@@ -32,8 +51,8 @@ export const apiAddShopImg = function (data) {
 /**
  * 删除商品图片
  */
-export const apiDelShopImg = function (url) {
-  return http.post('/shop/delImg', { url: url })
+export const apiDelShopImg = function (data) {
+  return http.post('/shop/delImg', data)
 }
 /**
  * 获取商品
@@ -82,6 +101,12 @@ export const apiGetInfo = function () {
  */
 export const apiUploadAboutBanner = function (data) {
   return http.post('/info/upload', data)
+}
+/**
+ * 删除关于我们图片
+ */
+export const apiDelAboutBanner = function (data) {
+  return http.post('/info/delete', data)
 }
 /**
  * 登录

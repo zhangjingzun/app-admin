@@ -15,7 +15,7 @@
         <el-row style="margin-bottom: 20px;" v-if="shopImg.length > 0">
           <el-col style="width: 200px;margin-bottom: 10px;" v-for="(item, index) in shopImg" :key="index" :style="'margin-right: 20px;'">
             <el-card :body-style="{ padding: '10px' }">
-              <img style="width: 180px;height: 180px;" :src="item" class="image">
+              <img style="width: 180px;height: 180px;" :src="`${hostUrl}${item}`" class="image">
               <div style="padding: 14px;">
                 <div class="bottom clearfix">
                   <el-button type="text" class="button" @click="delBanner(index, 1)">删除</el-button>
@@ -26,6 +26,7 @@
         </el-row>
         <el-upload
           action="/"
+          ref="uploadImg"
           :show-file-list="showFileList"
           :before-upload="beforeUpload"
         >
@@ -60,7 +61,7 @@
         <el-row style="margin-bottom: 20px;" v-if="detailImg.length > 0">
           <el-col style="width: 200px;margin-bottom: 10px;" v-for="(item, index) in detailImg" :key="index" :style="'margin-right: 20px;'">
             <el-card :body-style="{ padding: '10px' }">
-              <img style="width: 180px;height: 180px;" :src="item" class="image">
+              <img style="width: 180px;height: 180px;" :src="`${hostUrl}${item}`" class="image">
               <div style="padding: 14px;">
                 <div class="bottom clearfix">
                   <el-button type="text" class="button" @click="delBanner(index, 2)">删除</el-button>
@@ -71,6 +72,7 @@
         </el-row>
         <el-upload
           action="/"
+          ref="uploadDetail"
           :show-file-list="showFileList"
           :before-upload="beforeUpload"
         >
@@ -124,7 +126,9 @@ export default {
         is_hot: '0',
         is_recommend: '0',
         classic_id: null
-      }
+      },
+      removeImgList: [
+      ]
     }
   },
   created () {
@@ -184,6 +188,10 @@ export default {
       })
     },
     onSubmit () {
+      if (this.removeImgList.length > 0) {
+        this.removeImageFunc()
+      }
+      this.$refs.uploadImg.submit()
       let data = this.form
       let arr = this.shopImg
       data.shop_img = arr.join(',')
@@ -263,6 +271,14 @@ export default {
       })
       return false
     },
+    removeImageFunc () {
+      let arr = this.removeImgList
+      let data = {
+        list: arr
+      }
+      requestApi.apiDelShopImg(data).then(res => {
+      })
+    },
     delBanner (index, type) {
       let arr = []
       if (type === 1) {
@@ -271,20 +287,13 @@ export default {
         arr = this.detailImg
       }
       let url = arr[index]
-      let _this = this
       let i = index
-      requestApi.apiDelShopImg(url).then(res => {
-        if (res.code === 0) {
-          _this.showSuccess(_this, res.msg)
-          if (type === 1) {
-            _this.shopImg.splice(i, 1)
-          } else {
-            _this.detailImg.splice(i, 1)
-          }
-        } else {
-          _this.showWarning(_this, res.msg)
-        }
-      })
+      if (type === 1) {
+        this.shopImg.splice(i, 1)
+      } else {
+        this.detailImg.splice(i, 1)
+      }
+      this.removeImgList.push(url)
     }
   }
 }

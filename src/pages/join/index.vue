@@ -39,7 +39,6 @@ export default {
   name: 'banner',
   data () {
     return {
-      action: 'http://localhost:8888/set/banner',
       filename: __filename,
       headers: {
         'Access-Control-Allow-Origin': '*',
@@ -77,7 +76,7 @@ export default {
       let data = new FormData()
       data.append('file', file)
       let _this = this
-      requestApi.apiUploadFile(data).then(res => {
+      requestApi.apiUploadJoin(data).then(res => {
         if (res.code === 0) {
           let data = res.data
           _this.showSuccess(this, '上传成功')
@@ -92,7 +91,7 @@ export default {
     },
     getBanner () {
       let _this = this
-      requestApi.apiGetBanner().then(res => {
+      requestApi.apiGetJoin().then(res => {
         if (res.code === 0) {
           let data = res.data
           _this.fileList = data
@@ -107,7 +106,7 @@ export default {
       let url = this.fileList[index].url
       let _this = this
       let i = index
-      requestApi.apiDelFile(url).then(res => {
+      requestApi.apiDelJoin(url).then(res => {
         if (res.code === 0) {
           _this.showSuccess(_this, res.msg)
           _this.fileList.splice(i, 1)
