@@ -40,11 +40,6 @@ export default {
       rowHandle: {
         custom: [
           {
-            text: '详情',
-            size: 'small',
-            emit: 'custom-emit-detail-btn'
-          },
-          {
             text: '编辑',
             type: 'warning',
             size: 'small',

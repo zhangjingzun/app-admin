@@ -42,6 +42,10 @@
         <el-input v-model="form.info_lat"></el-input>
       </el-form-item>
 
+      <el-form-item label="视频链接">
+        <el-input v-model="form.info_video"></el-input>
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" @click="onSubmit">立即更新</el-button>
       </el-form-item>
@@ -64,7 +68,8 @@ export default {
         info_address: '',
         info_lon: '',
         info_lat: '',
-        info_img: ''
+        info_img: '',
+        info_video: ''
       },
       oldImg: []
     }

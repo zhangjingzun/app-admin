@@ -4,5 +4,6 @@ export default [
   { path: '/banner', title: '轮播图管理', icon: 'file-image-o' },
   { path: '/classic', title: '分类管理', icon: 'table' },
   { path: '/shop', title: '商品管理', icon: 'shopping-bag' },
-  { path: '/join', title: '宣传管理', icon: 'file-image-o' }
+  { path: '/join', title: '宣传管理', icon: 'file-image-o' },
+  { path: '/about', title: '关于我们', icon: 'id-card' }
 ]

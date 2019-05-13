@@ -1,14 +1,16 @@
+import util from '@/libs/util.js'
 import Vue from 'vue'
 import axios from 'axios'
+import router from '../router'
 Vue.prototype.$axios = axios
 axios.defaults.timeout = 8000
 let baseApiUrl = '/api'
 axios.defaults.baseURL = baseApiUrl
 
 // 设置默认请求头
-// axios.defaults.headers = {
-//   'Authorization': 'ohmca0mXwTRK7wk3P7YjJHI1df-g'
-// }
+axios.defaults.headers = {
+  'Authorization': 'ohmca0mXwTRK7wk3P7YjJHI1df-g'
+}
 
 let cancel = {}
 let promiseArr = {}
@@ -24,8 +26,7 @@ axios.interceptors.request.use(
     } else {
       promiseArr[config.url] = cancel
     }
-    // token
-    // const token = store.state.user.token
+    // const token = util.cookies.get('token')
     // if (token) {
     //   config.headers.Authorization = token
     // }
@@ -37,31 +38,32 @@ axios.interceptors.request.use(
 )
 
 // http response 拦截器
-/* axios.interceptors.response.use(
-  response => {
-    response = response.data
-    if (response.code === 403) {
-      // 只有在当前路由不是登录页面才跳转
-      console.log('登录拦截')
-    } else {
-      return response
-    }
-  },
-  error => {
-    // alert(JSON.stringify(error.response.status))
-    if (error.response) {
-      switch (error.response.status) {
-        case 403:
-          // 403 清除token信息并跳转到登录页面
-          // 只有在当前路由不是登录页面才跳转
-          console.log('登录拦截')
-          break
-        default:
-      }
-    }
-    // return Promise.reject(error)
-  }
-) */
+// axios.interceptors.response.use(
+//   response => {
+//     response = response.data
+//     console.log(response)
+//     if (response.code === 403) {
+//       // 只有在当前路由不是登录页面才跳转
+//       console.log('登录拦截')
+//     } else {
+//       return response
+//     }
+//   },
+//   error => {
+//     // alert(JSON.stringify(error.response.status))
+//     if (error.response) {
+//       switch (error.response.status) {
+//         case 403:
+//           // 403 清除token信息并跳转到登录页面
+//           // 只有在当前路由不是登录页面才跳转
+//           console.log('登录拦截')
+//           break
+//         default:
+//       }
+//     }
+//     // return Promise.reject(error)
+//   }
+// )
 
 export default {
   // get请求
@@ -98,7 +100,11 @@ export default {
         }
       }).then(res => {
         if (res.status === 200) {
-          resolve(res.data)
+          if (res.data.code === 403) {
+            router.replace('/login')
+          } else {
+            resolve(res.data)
+          }
         }
       }).catch(error => {
         reject(error)

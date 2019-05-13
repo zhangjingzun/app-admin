@@ -45,6 +45,11 @@
         <el-tag>单位（元）</el-tag>
       </el-form-item>
 
+      <el-form-item label="关注人数">
+        <el-input v-model="form.shop_count"></el-input>
+        <el-tag>单位（人）</el-tag>
+      </el-form-item>
+
       <el-form-item label="商品分类">
         <el-select v-model="selectValue" placeholder="请选择" @change="classicChange">
           <el-option
@@ -125,7 +130,8 @@ export default {
         shop_detail: '',
         is_hot: '0',
         is_recommend: '0',
-        classic_id: null
+        classic_id: null,
+        shop_count: 0
       },
       removeImgList: [
       ]
@@ -174,7 +180,8 @@ export default {
             shop_detail: '',
             is_hot: data.is_hot,
             is_recommend: data.is_recommend,
-            classic_id: data.classic_id
+            classic_id: data.classic_id,
+            shop_count: data.shop_count
           }
           let classList = _this.classList
           classList.forEach((item, index) => {
@@ -193,6 +200,9 @@ export default {
       }
       this.$refs.uploadImg.submit()
       let data = this.form
+      if (data.shop_count) {
+        data.shop_count = parseFloat(data.shop_count)
+      }
       let arr = this.shopImg
       data.shop_img = arr.join(',')
       let list = this.detailImg

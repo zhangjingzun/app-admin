@@ -47,7 +47,7 @@ const frameIn = [
         name: 'join',
         meta: {
           auth: true,
-          title: '轮播图管理'
+          title: '宣传管理'
         },
         component: () => import('@/pages/join')
       },

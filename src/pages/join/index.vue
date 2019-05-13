@@ -2,9 +2,9 @@
   <d2-container :filename="filename" class="banner">
     <template slot="header">轮播图管理</template>
     <el-row style="margin-bottom: 20px;">
-      <el-col style="width: 395px;margin-bottom: 10px;" v-for="(item, index) in fileList" :key="index" :style="'margin-right: 20px;'">
+      <el-col style="width: 305px;margin-bottom: 10px;" v-for="(item, index) in fileList" :key="index" :style="'margin-right: 20px;'">
         <el-card :body-style="{ padding: '10px' }">
-          <img style="width: 375px;height: 150px;" :src="`${hostUrl}${item.url}`" class="image">
+          <img style="width: 285px;height: 205px;" :src="`${hostUrl}${item.url}`" class="image">
           <div style="padding: 14px;">
             <!-- <span style="display: block;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{item.name}}</span> -->
             <div class="bottom clearfix">
@@ -36,9 +36,10 @@
 <script>
 import * as requestApi from '../../request'
 export default {
-  name: 'banner',
+  name: 'join',
   data () {
     return {
+      action: '/',
       filename: __filename,
       headers: {
         'Access-Control-Allow-Origin': '*',
