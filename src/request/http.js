@@ -4,8 +4,8 @@ import axios from 'axios'
 import router from '../router'
 Vue.prototype.$axios = axios
 axios.defaults.timeout = 8000
-let baseApiUrl = '/api'
-axios.defaults.baseURL = baseApiUrl
+// let baseApiUrl = '/api'
+// axios.defaults.baseURL = baseApiUrl
 
 // 设置默认请求头
 axios.defaults.headers = {
@@ -26,10 +26,10 @@ axios.interceptors.request.use(
     } else {
       promiseArr[config.url] = cancel
     }
-    // const token = util.cookies.get('token')
-    // if (token) {
-    //   config.headers.Authorization = token
-    // }
+    const token = util.cookies.get('token')
+    if (token) {
+      config.headers.Authorization = token
+    }
     return config
   },
   err => {

@@ -23,7 +23,7 @@ import plugin from './plugin/util/'
 Vue.prototype.$axios = axios
 Vue.use(ElementUI)
 Vue.use(D2Crud)
-Vue.prototype.hostUrl = 'http://192.168.0.102:8089/'
+Vue.prototype.hostUrl = 'http://129.28.146.133/'
 
 // 核心插件
 Vue.use(d2Admin)

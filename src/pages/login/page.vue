@@ -77,7 +77,7 @@ export default {
         password: '',
         code: ''
       },
-      verify: 'http://localhost:8089/user/verify',
+      verify: 'http://129.28.146.133/user/verify',
       // 校验
       rules: {
         username: [

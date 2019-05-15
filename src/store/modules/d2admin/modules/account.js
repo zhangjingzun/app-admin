@@ -35,7 +35,7 @@ export default {
           // 结束
           resolve(res)
         }).catch(err => {
-          console.log('err: ', err)
+          // console.log('err: ', err)
           reject(err)
         })
       })

@@ -60,10 +60,6 @@ export default {
     beforeUpload (file) {
       let name = file.name
       let arr = this.fileList
-      if (arr.length === 3) {
-        this.showWarning(this, `最多上传三张图片`)
-        return false
-      }
       let canFlag = true
       arr.forEach((item, index) => {
         if (item.name === name) {

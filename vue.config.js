@@ -17,7 +17,7 @@ module.exports = {
     // publicPath, // 和 publicPath 保持一致
     proxy: {
       '/api': {
-        target: 'http://192.168.0.102:8089/', // 对应自己的接口
+        target: 'http://129.28.146.133/', // 对应自己的接口
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
